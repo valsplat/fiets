@@ -248,9 +248,9 @@
 
 			// write errors to log
 			if(PHP_SAPI === 'cli') {
-				\Analog::log(sprintf('%s - %s (%s) @ %s:%s', $errfile, $errstr, $errno, $errfile, $errline), $errno);
+				\Analog::log(sprintf('%s - %s - %s @ %s:%s', $file, $title, $message, $file, $line), $code);
 			} else {
-				\Analog::log(sprintf('%s %s - %s (%s) @ %s:%s', $_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI'], $errstr, $errno, $errfile, $errline), $errno);
+				\Analog::log(sprintf('%s %s - %s - %s @ %s:%s', $_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI'], $title, $message, $file, $line), $code);
 			}
 
 			return true;
