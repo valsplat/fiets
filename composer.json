@@ -1,5 +1,5 @@
 {
-    "minimum-stability": "dev",
+    "minimum-stability": "beta",
     "name": "valsplat/fiets",
     "description": "A PHP 5.3+ micro-framework.",
     "keywords": ["microframework"],
