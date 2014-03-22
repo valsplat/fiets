@@ -1,0 +1,27 @@
+{
+    "minimum-stability": "dev",
+    "name": "valsplat/fiets",
+    "description": "A PHP 5.3+ micro-framework.",
+    "keywords": ["microframework"],
+    "homepage": "http://valsplat.nl",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Joris Leker",
+            "email": "joris@valsplat.nl"
+        },
+        {
+            "name": "Bjorn Post",
+            "email": "bjorn@valsplat.nl"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "twig/twig": "~1.15",
+        "Gum/Gum": "dev-master",
+        "analog/analog": "~1.0",
+    },
+    "autoload": {
+        "psr-0": { "Fiets": "src/" }
+    },
+}
