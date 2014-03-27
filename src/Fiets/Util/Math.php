@@ -43,4 +43,20 @@
 
 		   return (array_sum($data)/count($data));
 		}
+
+		/**
+		 * Parses a local string to float
+		 *
+		 * @param string locale formatted financial string
+		 * @return float value for given string
+		 * @author Joris Leker
+		 */
+		public static function parseFloat($string) {
+
+			$string = str_replace('.' , "", $string);
+			$string = str_replace(',' , ".", $string);
+
+			return (float) $string;
+
+		}
 	}
