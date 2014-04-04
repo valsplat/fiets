@@ -38,9 +38,6 @@
 			$this->view->setApplication($this);
 
 			$this->log = new \Fiets\Logger;
-
-			date_default_timezone_set(Configure::read('default_timezone'));
-			setlocale(LC_TIME, Configure::read('locale'));
 		}
 
 		/**
