@@ -29,15 +29,16 @@
 		}
 
 		public function render($name, $context = array()) {
-
-			$this->twig->addGlobal('REQUEST', array(
-				'server' => $_SERVER,
-				'data' => $_REQUEST,
-				'session' => $_SESSION,
-				'cookie' => $_COOKIE,
-				'get' => $_GET, 	// add these as late as possible, scripts might have added / changed stuff
-				'post' => $_POST 	// that we need during rendering
-			));
+			if(php_sapi_name() !== 'cli') {
+				$this->twig->addGlobal('REQUEST', array(
+					'server' => $_SERVER,
+					'data' => $_REQUEST,
+					'session' => $_SESSION,
+					'cookie' => $_COOKIE,
+					'get' => $_GET,  // add these as late as possible, scripts might have added / changed stuff
+					'post' => $_POST // that we need during rendering
+				));
+			}
 
 			return $this->twig->render($name, $context);
 		}
