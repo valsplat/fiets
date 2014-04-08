@@ -24,7 +24,7 @@
 		public function __construct() {
 			$this->mode = Configure::read('mode');
 
-			error_reporting(E_ALL & E_DEPRECATED);
+			error_reporting(E_ALL);
 			if($this->isProduction()) {
 				ini_set('display_errors', false);
 			} else {
