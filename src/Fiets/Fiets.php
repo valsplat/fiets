@@ -200,7 +200,7 @@
 				echo sprintf("<html><head><title>%s</title><style>%s</style></head><body>%s</body></html>", $title, $style, $html);
 
 			} else {
-				echo $this->render('500.html',compact('html','title','code','message','file','line','trace');
+				echo $this->render('500.html',compact('html','title','code','message','file','line','trace'));
 			}
 
 			if($title !== 'Pheasant\Database\Mysqli\Exception') {
