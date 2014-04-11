@@ -24,11 +24,12 @@
 		public function __construct() {
 			$this->mode = Configure::read('mode');
 
-			error_reporting(E_ALL);
 			if($this->isProduction()) {
 				ini_set('display_errors', false);
+				error_reporting(E_ALL ^ E_USER_DEPRECATED);
 			} else {
 				ini_set('display_errors', true);
+				error_reporting(E_ALL);
 			}
 
 			set_error_handler(array('\Fiets\Fiets', 'handleErrors'));
