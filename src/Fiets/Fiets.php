@@ -135,29 +135,6 @@
 		 * @author Bjorn Post
 		 */
 		protected function defaultError($argument = null) {
-			if(!headers_sent()) header('HTTP/1.1 500 Internal Server Error');
-
-			$style = "html * { padding:0; margin:0; }
-			body * { padding:10px 20px; max-width: 800px; }
-			body * * { padding:0; }
-			body { font:small sans-serif; }
-			body>div { border-bottom:1px solid #ddd; }
-			h1 { font-weight:normal; }
-			h2 { margin-bottom:.8em; }
-			h2 span { font-size:80%; color:#666; font-weight:normal; }
-			h3 { margin:1em 0 .5em 0; }
-			h4 { margin:0 0 .5em 0; font-weight: normal; }
-			code, pre { font-size: 100%; white-space: pre-wrap; }
-			table { border:1px solid #ccc; border-collapse: collapse; width:100%; background:white; margin-top:1.5em; }
-			tbody td, tbody th { vertical-align:top; padding:2px 3px; }
-			table th { width: 10em; text-align: left; }
-
-			#summary { background: #ffc; }
-			#summary h2 { font-weight: normal; color: #666; }
-			#traceback { background:#eee; line-height:1.5em; }
-			#summary table { border:none; background:transparent; }
-			pre.exception_value { font-family: sans-serif; color: #666; font-size: 1.5em; margin: 10px 0 10px 0; }";
-
 			$title = get_class($argument);
 			$code = $argument->getCode();
 			$message = $argument->getMessage();
@@ -165,47 +142,79 @@
 			$line = $argument->getLine();
 			$trace = $argument->getTraceAsString();
 
-			if(Configure::read('mode') === 'development') {
-				$html  = '<div id="summary">';
-				$html .= sprintf('<h1>%s @ %s</h1>', $title, $_SERVER['REQUEST_URI']);
-				$html .= sprintf('<pre class="exception_value">%s (%s)</pre>', $message, $code);
+			if(PHP_SAPI === 'cli') {
+				$out = "";
+				$out .= sprintf("\033[1;31m 🐞  %s\033[0m\n", $title);
+				$out .= sprintf("    %s (%s)\n", $message, $code);
+				$out .= sprintf("    File: %s:%s\n\n", $file, $line);
 
-				$html .= '<table class="meta">';
+				$out .= str_replace(ROOT,'',$trace);
 
-				// Request
-				if(PHP_SAPI !== 'cli') {
+				echo $out;
+				exit(1);
+			} else {
+				if(Configure::read('mode') === 'development') {
+					if(!headers_sent()) header('HTTP/1.1 500 Internal Server Error');
+
+					$style = "html * { padding:0; margin:0; }
+					body * { padding:10px 20px; max-width: 800px; }
+					body * * { padding:0; }
+					body { font:small sans-serif; }
+					body>div { border-bottom:1px solid #ddd; }
+					h1 { font-weight:normal; }
+					h2 { margin-bottom:.8em; }
+					h2 span { font-size:80%; color:#666; font-weight:normal; }
+					h3 { margin:1em 0 .5em 0; }
+					h4 { margin:0 0 .5em 0; font-weight: normal; }
+					code, pre { font-size: 100%; white-space: pre-wrap; }
+					table { border:1px solid #ccc; border-collapse: collapse; width:100%; background:white; margin-top:1.5em; }
+					tbody td, tbody th { vertical-align:top; padding:2px 3px; }
+					table th { width: 10em; text-align: left; }
+
+					#summary { background: #ffc; }
+					#summary h2 { font-weight: normal; color: #666; }
+					#traceback { background:#eee; line-height:1.5em; }
+					#summary table { border:none; background:transparent; }
+					pre.exception_value { font-family: sans-serif; color: #666; font-size: 1.5em; margin: 10px 0 10px 0; }";
+
+					$html  = '<div id="summary">';
+					$html .= sprintf('<h1>%s @ %s</h1>', $title, $_SERVER['REQUEST_URI']);
+					$html .= sprintf('<pre class="exception_value">%s (%s)</pre>', $message, $code);
+
+					$html .= '<table class="meta">';
+
 					$html .= sprintf('<tr><th>Request Method:</th><td>%s</td></tr>', $_SERVER['REQUEST_METHOD']);
 					$html .= sprintf('<tr><th>Request URI:</th><td>%s</td></tr>', $_SERVER['REQUEST_URI']);
-				}
 
-				$html .= sprintf('<tr><th>File:</th><td>%s</td></tr>', $file);
-				$html .= sprintf('<tr><th>Line:</th><td>%s</td></tr>', $line);
+					$html .= sprintf('<tr><th>File:</th><td>%s</td></tr>', $file);
+					$html .= sprintf('<tr><th>Line:</th><td>%s</td></tr>', $line);
 
-				$html .= '</table>';
-				$html .= '</div>';
-
-				if($title == 'Pheasant\Database\Mysqli\Exception') {
-					$html .= '<div id="traceback">';
-					$html .= '<h2>Query details</h2>';
-					$html .= @sprintf('<pre>%s</pre>', $argument->getTrace()[0]['args'][0]);
+					$html .= '</table>';
 					$html .= '</div>';
+
+					if($title == 'Pheasant\Database\Mysqli\Exception') {
+						$html .= '<div id="traceback">';
+						$html .= '<h2>Query details</h2>';
+						$html .= @sprintf('<pre>%s</pre>', $argument->getTrace()[0]['args'][0]);
+						$html .= '</div>';
+					}
+
+					if($trace) {
+						$html .= '<div id="traceback">';
+						$html .= '<h2>Traceback</h2>';
+						$html .= sprintf('<pre>%s</pre>', str_replace(ROOT,'',$trace) );
+						$html .= '</div>';
+					}
+
+					echo sprintf("<html><head><title>%s</title><style>%s</style></head><body>%s</body></html>", $title, $style, $html);
+
+				} else {
+					ob_clean();
+					ob_start();
+						echo $this->render('500.html',compact('html','title','code','message','file','line','trace'));
+					echo ob_flush();
+					ob_end_clean();
 				}
-
-				if($trace) {
-					$html .= '<div id="traceback">';
-					$html .= '<h2>Traceback</h2>';
-					$html .= sprintf('<pre>%s</pre>', str_replace(ROOT,'',$trace) );
-					$html .= '</div>';
-				}
-
-				echo sprintf("<html><head><title>%s</title><style>%s</style></head><body>%s</body></html>", $title, $style, $html);
-
-			} else {
-				ob_clean();
-				ob_start();
-					echo $this->render('500.html',compact('html','title','code','message','file','line','trace'));
-				echo ob_flush();
-				ob_end_clean();
 			}
 
 			if($title !== 'Pheasant\Database\Mysqli\Exception') {
@@ -246,13 +255,6 @@
 
 			if(error_reporting() & $errno) {
 				throw new \ErrorException($errstr, $errno, 0, $errfile, $errline);
-			}
-
-			// write errors to log
-			if(PHP_SAPI === 'cli') {
-				\Analog::log(sprintf('%s - %s - %s @ %s:%s', $file, $title, $message, $file, $line), $code);
-			} else {
-				\Analog::log(sprintf('%s %s - %s - %s @ %s:%s', $_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI'], $title, $message, $file, $line), $code);
 			}
 
 			return true;
