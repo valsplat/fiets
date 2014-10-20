@@ -52,11 +52,11 @@
 		 * @author Joris Leker
 		 */
 		public static function parseFloat($string) {
-
-			$string = str_replace('.' , "", $string);
+			// only if both ',' and '.' are present
+			if(strpos($string,'.') !== false && strpos($string,',') !== false) {
+				$string = str_replace('.' , "", $string);
+			}
 			$string = str_replace(',' , ".", $string);
-
 			return (float) $string;
-
 		}
 	}
