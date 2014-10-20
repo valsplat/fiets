@@ -220,16 +220,16 @@
 			if($title !== 'Pheasant\Database\Mysqli\Exception') {
 				// write errors to log
 				if(PHP_SAPI === 'cli') {
-					\Analog::log(sprintf('%s - %s (%s) @ %s:%s', $file, $title, $code, $file, $line), $code);
+					\Analog::log(sprintf('%s - %s: %s (%s) @ %s:%s', $file, $title, $message, $code, $file, $line), $code);
 				} else {
-					\Analog::log(sprintf('%s %s - %s (%s) @ %s:%s', $_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI'], $title, $code, $file, $line), $code);
+					\Analog::log(sprintf('%s %s - %s: %s (%s) @ %s:%s', $_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI'], $title, $message, $code, $file, $line), $code);
 				}
 			} else {
 				// write errors to log
 				if(PHP_SAPI === 'cli') {
-					\Analog::log(sprintf('%s - %s (%s) @ %s:%s (%s)', $file, $title, $code, $file, $line, $argument->getTrace()[0]['args'][0]), $code);
+					\Analog::log(sprintf('%s - %s: %s (%s) @ %s:%s (%s)', $file, $title, $message, $code, $file, $line, $argument->getTrace()[0]['args'][0]), $code);
 				} else {
-					\Analog::log(sprintf('%s %s - %s (%s) @ %s:%s (%s)', $_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI'], $title, $code, $file, $line, $argument->getTrace()[0]['args'][0]), $code);
+					\Analog::log(sprintf('%s %s - %s: %s (%s) @ %s:%s (%s)', $_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI'], $title, $message, $code, $file, $line, $argument->getTrace()[0]['args'][0]), $code);
 				}
 			}
 		}
