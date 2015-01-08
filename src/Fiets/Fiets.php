@@ -37,8 +37,6 @@
 
 			$this->view = new \Fiets\View;
 			$this->view->setApplication($this);
-
-			$this->log = new \Fiets\Logger;
 		}
 
 		/**
@@ -220,16 +218,16 @@
 			if($title !== 'Pheasant\Database\Mysqli\Exception') {
 				// write errors to log
 				if(PHP_SAPI === 'cli') {
-					\Analog::log(sprintf('%s - %s: %s (%s) @ %s:%s', $file, $title, $message, $code, $file, $line), $code);
+					\Analog::log(sprintf('%s - %s: %s (%s) @ %s:%s', $file, $title, $message, $code, $file, $line), \Analog::ERROR);
 				} else {
-					\Analog::log(sprintf('%s %s - %s: %s (%s) @ %s:%s', $_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI'], $title, $message, $code, $file, $line), $code);
+					\Analog::log(sprintf('%s %s - %s: %s (%s) @ %s:%s', $_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI'], $title, $message, $code, $file, $line), \Analog::ERROR);
 				}
 			} else {
 				// write errors to log
 				if(PHP_SAPI === 'cli') {
-					\Analog::log(sprintf('%s - %s: %s (%s) @ %s:%s (%s)', $file, $title, $message, $code, $file, $line, $argument->getTrace()[0]['args'][0]), $code);
+					\Analog::log(sprintf('%s - %s: %s (%s) @ %s:%s (%s)', $file, $title, $message, $code, $file, $line, $argument->getTrace()[0]['args'][0]), \Analog::ERROR);
 				} else {
-					\Analog::log(sprintf('%s %s - %s: %s (%s) @ %s:%s (%s)', $_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI'], $title, $message, $code, $file, $line, $argument->getTrace()[0]['args'][0]), $code);
+					\Analog::log(sprintf('%s %s - %s: %s (%s) @ %s:%s (%s)', $_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI'], $title, $message, $code, $file, $line, $argument->getTrace()[0]['args'][0]), \Analog::ERROR);
 				}
 			}
 		}
