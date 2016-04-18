@@ -8,7 +8,7 @@
 
 		public function __construct() {
 			$this->twig = new \Twig_Environment(new \Twig_Loader_Filesystem(ROOT.'/templates'), array(
-				'cache' => ROOT.'/cache',
+				'cache' => ROOT.'/tmp/twig',
 				'debug' => (Configure::read('mode') === 'development'),
 			));
 
