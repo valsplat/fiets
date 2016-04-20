@@ -20,4 +20,15 @@
 
 			return self::$instance;
 		}
+		
+		/**
+		 * Get the instance.
+		 *
+		 * @deprecated use self::getInstance()
+		 * @return void
+		 * @author Bjorn
+		 */
+		public static function get_instance() {
+			return self::getInstance();
+		}
 	}
