@@ -24,6 +24,8 @@
 
         public static function extractParts($name) {
 
+            $nameCopy = $name;
+
             $processManually = false;
             $geslacht = null;
             $voornaam = null;
@@ -36,20 +38,21 @@
             foreach ($tussenvoegsels as $t) {
                $transform[$t] = str_replace(' ', '**', $t);
                 if ($t !== $transform[$t]) {
-                    $name = str_replace($t, $transform[$t], $name);
+                    $nameCopy = str_replace($t, $transform[$t], $nameCopy);
                 }
             }
 
             // 2. Make sure we properly treat '-' (used when name of partner is added to achternaam)
-            $name = str_replace('-',' ##-## ', $name);
+            $nameCopy = str_replace('-',' ##-## ', $nameCopy);
 
-            $parts = preg_split('/[\s]+/', $name);
+            $parts = preg_split('/[\s]+/', $nameCopy);
 
             // If we have a '##-##' part, then everything from it's index-1 till the end should be considered as a single part
             if (false !== $index = array_search('##-##', $parts)) {
                 $parts[$index - 1] = implode(' ',array_slice($parts, $index-1));
-                $parts = array_slice($parts, 0, $index-1);
+                $parts = array_slice($parts, 0, $index);
             }
+
 
             // 2. Simple cases: one or two parts
             if (count($parts) === 1) {
@@ -84,7 +87,7 @@
             }
             if ($achternaam !== null) {
                 $achternaam = str_replace('**', ' ', $achternaam);
-                $achternaam = str_replace('##-##', '-', $achternaam);
+                $achternaam = str_replace(' ##-## ', '-', $achternaam);
             }
 
             return [
