@@ -25,6 +25,7 @@
         public static function extractParts($name) {
 
             $processManually = false;
+            $geslacht = null;
             $voornaam = null;
             $tussenvoegsel = null;
             $achternaam = null;
