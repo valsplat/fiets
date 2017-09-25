@@ -33,13 +33,11 @@
             $achternaam = null;
 
             // 1. Replace spaces in common tussenvoegsels, to make them one word
-            $tussenvoegsels = ['van','de','ter','den','van \'t','de la', 'da','van der','van de','van den','vd','v.d.','v.d',];
+            $tussenvoegsels = ['van','de','ter','den','van \'t','de la', 'da','van der','van de','van den','vd','v.d.','v.d','du','von','le','op den','v/d',];
             $transform = [];
             foreach ($tussenvoegsels as $t) {
-               $transform[$t] = str_replace(' ', '**', $t);
-                if ($t !== $transform[$t]) {
-                    $nameCopy = str_replace($t, $transform[$t], $nameCopy);
-                }
+                $transform[$t] = str_replace(' ', '**', $t);
+                $nameCopy = preg_replace("/$t/i", $transform[$t], $nameCopy);
             }
 
             // 2. Make sure we properly treat '-' (used when name of partner is added to achternaam)
