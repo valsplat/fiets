@@ -79,6 +79,14 @@
                 $voornaam = null;
             }
 
+            if ($tussenvoegsel !== null) {
+                $tussenvoegsel = str_replace('**', ' ', $tussnevoegsel);
+            }
+            if ($achternaam !== null) {
+                $achternaam = str_replace('**', ' ', $achternaam);
+                $achternaam = str_replace('##-##', '-', $achternaam);
+            }
+
             return [
                 'voornaam' => $voornaam,
                 'tussenvoegsel' => $tussenvoegsel,
