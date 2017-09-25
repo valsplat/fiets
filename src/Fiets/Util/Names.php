@@ -46,7 +46,7 @@
             $parts = preg_split('/[\s]+/', $name);
 
             // If we have a '##-##' part, then everything from it's index-1 till the end should be considered as a single part
-            if (false !== $index = array_search('##-##', $parts) && $index > 0) {
+            if (false !== $index = array_search('##-##', $parts)) {
                 $parts[$index - 1] = implode(' ',array_slice($parts, $index-1));
                 $parts = array_slice($parts, 0, $index-1);
             }
@@ -64,9 +64,9 @@
                 $tussenvoegsel = $parts[1];
                 $achternaam = implode(' ', array_slice($parts, 2));
 
-
             // 4. We can't know for sure.
             } else {
+                $voornaam = $name;
                 $processManually = true;
             }
 
