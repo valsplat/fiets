@@ -80,7 +80,7 @@
             }
 
             if ($tussenvoegsel !== null) {
-                $tussenvoegsel = str_replace('**', ' ', $tussnevoegsel);
+                $tussenvoegsel = str_replace('**', ' ', $tussenvoegsel);
             }
             if ($achternaam !== null) {
                 $achternaam = str_replace('**', ' ', $achternaam);
