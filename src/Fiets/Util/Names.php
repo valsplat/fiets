@@ -40,18 +40,18 @@
                 // gender neutral
                 'ir'=>null, 'ing'=>null, 'dr'=>null, 'drs'=>null, 'prof'=>null, 'dr'=>null,
                 // male
-                'meneer'=>'m', 'dhr'=>'m', 'hr', 'de heer',
+                'meneer'=>'m', 'dhr'=>'m', 'hr'=>'m', 'de heer'=>'m',
                 // female
                 'mevrouw'=>'f', 'mevr'=>'f', 'mw'=>'f',
             ];
 
             // 1. If name starts with a titel or aanhef, strip it (but remember we did so, might be relevant for parsing rest of name).
             foreach ($aanhef as $a => $gender) {
-                if (preg_match("/(^|\W){$a}[\W]?/i", $nameCopy)) {
+                if (preg_match("/(^|\W){$a}\.?[\W]+/i", $nameCopy)) {
                     if ($geslacht === null) {
                         $geslacht = $gender;
                     }
-                    $nameCopy = trim(preg_replace("/(^|\W){$a}[\W]*/i",'',$nameCopy));
+                    $nameCopy = trim(preg_replace("/(^|\W){$a}\.?[\W]+/i",'',$nameCopy));
                     $matchedAanhef = true;
                 }
             }
@@ -70,10 +70,16 @@
                 $nameCopy = preg_replace('/^(([A-Z]{1}\.)+)/','\1 ', $nameCopy);
                 $matchedVoorletters = true;
             }
-            echo $nameCopy;
 
             // 4. Make sure we properly treat '-' (used when name of partner is added to achternaam)
-            $nameCopy = str_replace('-',' ##-## ', $nameCopy);
+            if ($matchedVoorletters || $matchedAanhef) {
+                // We can assume everything in $nameCopy belongs to achternaam (cause initials or title already stripped)
+                $nameCopy = preg_replace('/\-/',' ##-## ', $nameCopy);
+            } else {
+                // A '-' before the first space might be like Jan-Willem, so '-' before first space.
+                $nameCopy = preg_replace('/([\s][\w]+)( ?- ?)/', '\1 ##-## ', $nameCopy);
+            }
+            echo $nameCopy;
 
             $parts = preg_split('/[\s]+/', $nameCopy);
 
@@ -115,6 +121,9 @@
 
 
             // Clean up temporary formatting
+            if ($voornaam !== null) {
+                $voornaam = str_replace(' ##-## ', '-', $voornaam);
+            }
             if ($tussenvoegsel !== null) {
                 $tussenvoegsel = str_replace('**', ' ', $tussenvoegsel);
             }
