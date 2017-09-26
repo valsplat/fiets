@@ -38,20 +38,20 @@
 
             $aanhef = [
                 // gender neutral
-                'ir'=>null, 'ing'=>null, 'dr'=>null, 'drs'=>null, 'prof'=>null,
+                'ir'=>null, 'ing'=>null, 'dr'=>null, 'drs'=>null, 'prof'=>null, 'dr'=>null,
                 // male
                 'meneer'=>'m', 'dhr'=>'m', 'hr', 'de heer',
                 // female
-                'mevrouw'=>'f', 'mevr'=>'f', 'mw'=>'f', 'dr'=>'f',
+                'mevrouw'=>'f', 'mevr'=>'f', 'mw'=>'f',
             ];
 
             // 1. If name starts with a titel or aanhef, strip it (but remember we did so, might be relevant for parsing rest of name).
             foreach ($aanhef as $a => $gender) {
-                if (preg_match("/^$a\.?/", $nameCopy)) {
+                if (preg_match("/(^|\W){$a}[\W]?/i", $nameCopy)) {
                     if ($geslacht === null) {
                         $geslacht = $gender;
                     }
-                    $nameCopy = trim(preg_replace("/^$a\.?/",'',$nameCopy));
+                    $nameCopy = trim(preg_replace("/(^|\W){$a}[\W]*/i",'',$nameCopy));
                     $matchedAanhef = true;
                 }
             }
@@ -66,10 +66,11 @@
 
             // 3. Make sure any voorletters are nicely grouped like J.R. (without spaces between them)
             if (preg_match('/([A-Z]{1})\.?[\W]/', $nameCopy)) {
-                $nameCopy = preg_replace('/([A-Z]{1})\.?[\W]/','\1. ', $nameCopy);
-                $nameCopy = preg_replace('/(^([A-Z]{1}\.)+)/','\1 ', $nameCopy);
+                $nameCopy = preg_replace('/([A-Z]{1})\.?[\W]/','\1.', $nameCopy);
+                $nameCopy = preg_replace('/^(([A-Z]{1}\.)+)/','\1 ', $nameCopy);
                 $matchedVoorletters = true;
             }
+            echo $nameCopy;
 
             // 4. Make sure we properly treat '-' (used when name of partner is added to achternaam)
             $nameCopy = str_replace('-',' ##-## ', $nameCopy);
