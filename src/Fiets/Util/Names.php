@@ -79,7 +79,6 @@
                 // A '-' before the first space might be like Jan-Willem, so '-' before first space.
                 $nameCopy = preg_replace('/([\s][\w]+)( ?- ?)/', '\1 ##-## ', $nameCopy);
             }
-            echo $nameCopy;
 
             $parts = preg_split('/[\s]+/', $nameCopy);
 
