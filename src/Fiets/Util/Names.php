@@ -61,7 +61,7 @@
             $transform = [];
             foreach ($tussenvoegsels as $t) {
                 $transform[$t] = str_replace(' ', '**', $t);
-                $nameCopy = preg_replace("/$t/i", $transform[$t], $nameCopy);
+                $nameCopy = preg_replace("/[\s]{$t}[\s]/i", " {$transform[$t]} ", $nameCopy);
             }
 
             // 3. Make sure any voorletters are nicely grouped like J.R. (without spaces between them)
