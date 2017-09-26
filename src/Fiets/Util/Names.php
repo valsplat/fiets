@@ -24,15 +24,39 @@
 
         public static function extractParts($name) {
 
-            $nameCopy = $name;
+            $nameCopy = trim($name);
 
             $processManually = false;
+            $matchedAanhef = false;
+            $matchedVoorletters = false;
+
             $geslacht = null;
             $voornaam = null;
             $tussenvoegsel = null;
             $achternaam = null;
 
-            // 1. Replace spaces in common tussenvoegsels, to make them one word
+
+            $aanhef = [
+                // gender neutral
+                'ir'=>null, 'ing'=>null, 'dr'=>null, 'drs'=>null, 'prof'=>null,
+                // male
+                'meneer'=>'m', 'dhr'=>'m', 'hr', 'de heer',
+                // female
+                'mevrouw'=>'f', 'mevr'=>'f', 'mw'=>'f', 'dr'=>'f',
+            ];
+
+            // 1. If name starts with a titel or aanhef, strip it (but remember we did so, might be relevant for parsing rest of name).
+            foreach ($aanhef as $a => $gender) {
+                if (preg_match("/^$a\.?/", $nameCopy)) {
+                    if ($geslacht === null) {
+                        $geslacht = $gender;
+                    }
+                    $nameCopy = trim(preg_replace("/^$a\.?/",'',$nameCopy));
+                    $matchedAanhef = true;
+                }
+            }
+
+            // 2. Replace spaces in common tussenvoegsels, to make them one word
             $tussenvoegsels = ['van','de','ter','den','van \'t','de la', 'da','van der','van de','van den','vd','v.d.','v.d','du','von','le','op den','v\/d',];
             $transform = [];
             foreach ($tussenvoegsels as $t) {
@@ -40,7 +64,14 @@
                 $nameCopy = preg_replace("/$t/i", $transform[$t], $nameCopy);
             }
 
-            // 2. Make sure we properly treat '-' (used when name of partner is added to achternaam)
+            // 3. Make sure any voorletters are nicely grouped like J.R. (without spaces between them)
+            if (preg_match('/([A-Z]{1})\.?[\W]/', $nameCopy)) {
+                $nameCopy = preg_replace('/([A-Z]{1})\.?[\W]/','\1. ', $nameCopy);
+                $nameCopy = preg_replace('/(^([A-Z]{1}\.)+)/','\1 ', $nameCopy);
+                $matchedVoorletters = true;
+            }
+
+            // 4. Make sure we properly treat '-' (used when name of partner is added to achternaam)
             $nameCopy = str_replace('-',' ##-## ', $nameCopy);
 
             $parts = preg_split('/[\s]+/', $nameCopy);
@@ -52,34 +83,37 @@
             }
 
 
-            // 2. Simple cases: one or two parts
+            // 5. Simple cases: one or two parts
             if (count($parts) === 1) {
-                $voornaam = $parts[0];
+                if ($matchedAanhef) {
+                    $achternaam = $parts[0];
+                } else {
+                    $voornaam = $parts[0];
+                }
+
             } else if (count($parts) === 2) {
                 $voornaam = $parts[0];
                 $achternaam = $parts[1];
 
-            // 3. relatively simple case: part 2 is a tussenvoegsel
+            // 6. relatively simple case: part 2 is a tussenvoegsel
             } else if (in_array($parts[1], $transform)) {
                 $voornaam = $parts[0];
                 $tussenvoegsel = $parts[1];
                 $achternaam = implode(' ', array_slice($parts, 2));
 
-            // 4. We can't know for sure.
+            // 7. More parts, but we matched voorletters, so asume rest is lastname
+            } else if($matchedVoorletters) {
+                $voornaam = parts[0];
+                $achternaam = implode(' ', array_slice($parts, 1));
+
+            // 8. More parts, and did not process voorletters - We can't know for sure what is first and what is last name
             } else {
                 $voornaam = $name;
                 $processManually = true;
             }
 
-            // 5. Do we know anything about gender?
-            if (in_array(strtolower($voornaam), ['meneer','dhr',])) {
-                $geslacht = 'M';
-                $voornaam = null;
-            } else if (in_array(strtolower($voornaam), ['mevrouw','mevr',])) {
-                $geslacht = 'F';
-                $voornaam = null;
-            }
 
+            // Clean up temporary formatting
             if ($tussenvoegsel !== null) {
                 $tussenvoegsel = str_replace('**', ' ', $tussenvoegsel);
             }
