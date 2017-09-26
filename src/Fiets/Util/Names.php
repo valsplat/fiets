@@ -103,7 +103,7 @@
 
             // 7. More parts, but we matched voorletters, so asume rest is lastname
             } else if($matchedVoorletters) {
-                $voornaam = parts[0];
+                $voornaam = $parts[0];
                 $achternaam = implode(' ', array_slice($parts, 1));
 
             // 8. More parts, and did not process voorletters - We can't know for sure what is first and what is last name
