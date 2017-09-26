@@ -38,7 +38,7 @@
 
             $aanhef = [
                 // gender neutral
-                'ir'=>null, 'ing'=>null, 'dr'=>null, 'drs'=>null, 'prof'=>null, 'dr'=>null,
+                'ir'=>null, 'ing'=>null, 'dr'=>null, 'drs'=>null, 'prof'=>null,
                 // male
                 'meneer'=>'m', 'dhr'=>'m', 'hr'=>'m', 'de heer'=>'m',
                 // female
@@ -57,7 +57,7 @@
             }
 
             // 2. Replace spaces in common tussenvoegsels, to make them one word
-            $tussenvoegsels = ['van','de','ter','den','van \'t','de la', 'da','van der','van de','van den','vd','v.d.','v.d','du','von','le','op den','v\/d',];
+            $tussenvoegsels = ['van','de','ter','den','van \'t','de la', 'da','van der','van de','van den','vd','v.d.','v.d','du','von','le','op den','v\/d','ten','de la',];
             $transform = [];
             foreach ($tussenvoegsels as $t) {
                 $transform[$t] = str_replace(' ', '**', $t);
