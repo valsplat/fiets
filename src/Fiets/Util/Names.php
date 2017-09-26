@@ -61,8 +61,9 @@
             $transform = [];
             foreach ($tussenvoegsels as $t) {
                 $transform[$t] = str_replace(' ', '**', $t);
-                $nameCopy = preg_replace("/[\s]{$t}[\s]/i", " {$transform[$t]} ", $nameCopy);
+                $nameCopy = preg_replace("/(^|[\s]){$t}[\s]/i", " {$transform[$t]} ", $nameCopy);
             }
+            $nameCopy = trim($nameCopy);
 
             // 3. Make sure any voorletters are nicely grouped like J.R. (without spaces between them)
             if (preg_match('/([A-Z]{1})\.?[\W]/', $nameCopy)) {
@@ -98,7 +99,12 @@
                 }
 
             } else if (count($parts) === 2) {
-                $voornaam = $parts[0];
+                if (in_array($parts[0],$transform)) {
+                    $tussenvoegsel = $parts[0];
+                } else {
+                    $voornaam = $parts[0];
+                }
+
                 $achternaam = $parts[1];
 
             // 6. relatively simple case: part 2 is a tussenvoegsel
