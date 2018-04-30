@@ -17,9 +17,9 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "twig/twig": "~1.15",
-        "gum/gum": "0.2.1",
-        "analog/analog": "~1.0"
+        // "twig/twig": "~1.15",
+        // "gum/gum": "0.2.1",
+        // "analog/analog": "~1.0"
     },
     "autoload": {
         "psr-0": { "Fiets": "src/" }
