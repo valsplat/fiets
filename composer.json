@@ -1,9 +1,9 @@
 {
     "minimum-stability": "beta",
     "name": "valsplat/fiets",
-    "description": "A PHP 5.3+ micro-framework.",
-    "keywords": ["microframework"],
-    "homepage": "http://valsplat.nl",
+    "description": "A collection of utility classes",
+    "keywords": ["utility"],
+    "homepage": "https://valsplat.nl",
     "license": "proprietary",
     "authors": [
         {
