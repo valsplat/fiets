@@ -57,7 +57,7 @@
             }
 
             // 2. Replace spaces in common tussenvoegsels, to make them one word
-            $tussenvoegsels = ['van','de','ter','den','van \'t','de la', 'da','van der','van de','van den','vd','v.d.','v.d','du','von','le','op den','v\/d','ten','de la',];
+            $tussenvoegsels = ['van','de','ter','den','van \'t','de la', 'da','van der','van de','van den','vd','v.d.','v.d','du','von','le','op den','v\/d','ten','de la','el','in \'t'];
             $transform = [];
             foreach ($tussenvoegsels as $t) {
                 $transform[$t] = str_replace(' ', '**', $t);
