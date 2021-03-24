@@ -1,16 +1,20 @@
 <?php
-	namespace Fiets;
 
-	abstract class Middleware {
-		protected $app;
+namespace Fiets;
 
-		final public function setApplication(&$application) {
-			$this->app = $application;
-		}
+abstract class Middleware
+{
+    protected $app;
 
-		final public function getApplication() {
-			return $this->app;
-		}
+    final public function setApplication(&$application)
+    {
+        $this->app = $application;
+    }
 
-		abstract public function call();
-	}
+    final public function getApplication()
+    {
+        return $this->app;
+    }
+
+    abstract public function call();
+}
