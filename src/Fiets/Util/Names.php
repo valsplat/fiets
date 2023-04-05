@@ -6,16 +6,16 @@ class Names
 {
     /**
      * Expected types of names
-     * 1. Joris (only first name)
-     * 2. Joris Leker (simplest case)
-     * 3. Bibi van Hoeflaken (single tussenvoegsel)
-     * 4. Jan Hendrik Leker (first name consits of multiple words, no tussenvoesel)
-     * 5. Jan Hendrik van Hoeflaken (first name consists of multiple words, tussenvoegsel)
-     * 6. Bjorn Post - van der Heijden (tussenvoegsel within surname)
-     * 7. Helene van den Dries (single tussenvoegsel, multiple words)
-     * 8. Helene van den Dries - Post (achternaam consists of mutiple words)
-     * 9. Helene van den Dries - van der Heijden (achternaam consists of multiple words and contains own tussenvoegsel of multiple words
-     * 10. Dhr. van den Broek (No firstname, but gender prefix).
+     * 1. Henk (only first name)
+     * 2. Henk Boer (simplest case)
+     * 3. Henk de Boer (single tussenvoegsel)
+     * 4. Henk Frederik Boer (first name consits of multiple words, no tussenvoesel)
+     * 5. Henk Frederik de Boer (first name consists of multiple words, tussenvoegsel)
+     * 6. Henk Boer - van der Meulen (tussenvoegsel within surname)
+     * 7. Henk van der Plas (single tussenvoegsel, multiple words)
+     * 8. Henk van der Plas - Boer (achternaam consists of mutiple words)
+     * 9. Henk van der Plan - van den Achternaam (achternaam consists of multiple words and contains own tussenvoegsel of multiple words
+     * 10. Dhr. van der Plas (No firstname, but gender prefix).
      *
      * There is no way to distinguish case 5 and 6 automatically, but voor/achternaam and tussenvoegsel contain different parts.
      * these case need manual inspection
@@ -63,9 +63,9 @@ class Names
         $nameCopy = trim($nameCopy);
 
         // 3. Make sure any voorletters are nicely grouped like J.R. (without spaces between them)
-        if (preg_match('/([A-Z]{1})\.?[\W]/', $nameCopy)) {
+        if (preg_match('/^([A-Z]{1})\.?[\s]/', $nameCopy)) {
             $nameCopy = preg_replace('/([A-Z]{1})\.?[\W]/', '\1.', $nameCopy);
-            $nameCopy = preg_replace('/^(([A-Z]{1}\.)+)/', '\1 ', $nameCopy);
+            $nameCopy = preg_replace('/^(([A-Z]+\.)+)/', '\1 ', $nameCopy);
             $matchedVoorletters = true;
         }
 
